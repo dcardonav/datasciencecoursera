@@ -6,6 +6,8 @@
 #in the same directory as the script file; this dataset directory
 #must contain the unzipped files for the project
 
+
+
 # Here we load the training and the test data into the workspace
 
 # read test and training files
