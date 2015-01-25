@@ -13,6 +13,9 @@ Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 The script doesn't rely on any other library aside from those included in the R Version stated above
 
+The dataset used was provided by:
+http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones
+
 ## Requirements:
 * The script must be located in the same directory as the folder containing the data
 * The script will look for the files in a folder called "dataset", this was done to facilitate the hard coding of file paths in the script
