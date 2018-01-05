@@ -1,0 +1,36 @@
+## National University of Colombia
+
+This map was created in January 5th of 2018.
+
+The map shows the locations of the main campuses of the National University of Colombia in Medellin.
+
+```{r, echo = FALSE, warning=FALSE, message=FALSE}
+
+library(leaflet);
+library(dplyr);
+
+
+unal_icon <- makeIcon(
+  iconUrl = "https://upload.wikimedia.org/wikipedia/commons/c/c4/Escudo_unal_2016.png"
+  #iconWidth = 31*215/230, iconHeight = 31,
+  #iconAnchorX = 31*215/230/2, iconAnchorY = 16
+)
+
+unal_sites <- c(
+  "<a href='https://medellin.unal.edu.co/'>National University of Colombia - Medellin (Main campus)</a>",
+  "<a href='https://minas.medellin.unal.edu.co/'>National University of Colombia - Medellin (School of Mines) </a>",
+  "<a href='https://www.minminas.gov.co/web/ingles/ingeominas'>Ingeominas</a>"
+)
+
+unalLatLong <- data.frame(
+  lat = c(6.261653, 6.274731, 6.276334 ),
+  lng = c(-75.576686, -75.592589, -75.589455 )
+)
+
+unalLatLong %>%
+  leaflet() %>%
+  addTiles() %>%
+  addMarkers(popup = unal_sites)
+
+
+```
