@@ -1,0 +1,78 @@
+---
+title: Practical Machine Learning Project Report
+author: "DCV"
+output: html_document
+---
+
+## Introduction  
+Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible to collect a large amount of data about personal activity relatively inexpensively. These type of devices are part of the quantified self movement - a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how well they do it.
+
+## Data Preprocessing 
+First we load the libraries that we'll be using.
+```{r, cache = T, eval=FALSE}
+library(caret)
+library(e1071)
+```
+### Obtaining the Data
+```{r, cache = T, eval=FALSE}
+trainUrl <-"https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv"
+testUrl <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv"
+trainF <- "./data/pml-training.csv"
+testF  <- "./data/pml-testing.csv"
+if (!file.exists("./data")) {
+  dir.create("./data")
+}
+if (!file.exists(trainF)) {
+  download.file(trainUrl, destfile=trainF, method="curl")
+}
+if (!file.exists(testF)) {
+  download.file(testUrl, destfile=testF, method="curl")
+}
+```  
+
+After downloading the data from the data source, we can read the two csv files into two data frames.  
+```{r, cache = T, eval=FALSE}
+trainUnp <- read.csv("./data/pml-training.csv")
+testUnp <- read.csv("./data/pml-testing.csv")
+```
+
+We have 19622 observations for the train data with 160, let us see how many complete cases we have (cases that have a value for every column).
+
+### Data Preprocessing
+We see that we have 406 complete cases, that's less than 2% of the data, so let's take a differente approach, we are going to remove columns that have NA or NULL values, id columns and timestamps.
+```{r, cache = T, eval=FALSE}
+sum(complete.cases(trainUnp))
+```
+Removing columns that have NA or NULL values for both datasets
+```{r, cache = T, eval=FALSE}
+trainUnp <- trainUnp[, colSums(is.na(trainUnp)) == 0] 
+testUnp <- testUnp[, colSums(is.na(testUnp)) == 0] 
+```  
+Removing columns related to identification and timestamps.
+```{r, cache = T, eval=FALSE}
+classe <- trainUnp$classe
+trainRemove <- grepl("^X|timestamp|window", names(trainUnp))
+trainUnp <- trainUnp[, !trainRemove]
+trainCleaned <- trainUnp[, sapply(trainUnp, is.numeric)]
+trainCleaned$classe <- classe
+testRemove <- grepl("^X|timestamp|window", names(testUnp))
+testUnp <- testUnp[, !testRemove]
+testCleaned <- testUnp[, sapply(testUnp, is.numeric)]
+```
+At the end, we have 19622 with 53 variables, that's less than a third of the original columns.
+
+## Model Building
+Then we build a model using **Support Vector Machines**, we use the function **tune** to find the best model iterating over a list of parameters for cost and gamma. Also we use a seed for reproducibility. I left this code running for a lot of time while the algorithm looked for the best model.
+```{r, cache = T, eval=FALSE}
+set.seed(1)
+#tune.out = tune(svm, classe~., data = trainCleaned, kernel = "radial",
+#                ranges = list(cost=seq(1,5,1), gamma = seq(0.5,3,0.5)))
+svmfit = svm(classe~., data =trainCleaned, kernel = "radial", gamma = 1, cost = 2)
+```
+This gives us a model that has a cost of 2 and a gamma of 1. I commented the fitting part due to long execution time
+
+## Prediction
+We then apply the model to the test data
+```{r, cache = T, eval=FALSE}
+testPre <- predict(svmfit, testCleaned)
+```  
