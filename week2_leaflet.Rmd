@@ -1,0 +1,39 @@
+---
+title: "Leaflet Examples"
+author: "David Cardona"
+date: "March 1st, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(leaflet)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## My First Map
+
+
+```{r echo=FALSE}
+hopkinsIcon <- makeIcon(iconUrl = "http://identidad.unal.edu.co/fileadmin/_processed_/csm_escudo_unal_2015-01_bfc1bb56f4.jpg",
+                        iconWidth = 50*2000/1023, iconHeight = 50,
+                        iconAnchorX = 31*2000/1023/2, iconAnchorY = 16
+                )
+
+hopkinsLatLong <- data.frame(
+                    lat = c(6.275286, 6.261732, 6.263787),
+                    lng = c(-75.588786, -75.575896, -75.574257)
+                )
+
+hopkinsSites <- c(
+                    "<a href='https://minas.medellin.unal.edu.co/'>School of Mines - National University of Colombia</a>",
+                    "<a href='http://medellin.unal.edu.co/'>Medellin Campus - National University of Colombia</a>",
+                    "<a href='http://medellin.unal.edu.co/'>El Río Nucleous - National University of Colombia</a>"
+)
+
+hopkinsLatLong %>% leaflet() %>% addTiles() %>% addMarkers(icon = hopkinsIcon, popup = hopkinsSites)
+hopkinsLatLong %>% leaflet() %>% addTiles() %>% addMarkers(icon = hopkinsIcon, popup = hopkinsSites)
+
+
+```
+
+
