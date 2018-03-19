@@ -1,0 +1,53 @@
+Course Project
+========================================================
+author: David
+date: March 18th
+autosize: true
+
+Online Linear Regression
+========================================================
+
+The allows the user to select several variables to determine the impact they have over the fuel consumption of vehicles. 
+
+The variables that can be used are:
+
+- Number of Cylinders
+- Transmission Type
+- Number of Gears
+- Weight
+- Number of Carburators
+- Gross Horsepower
+
+Data
+========================================================
+
+The data comes from the mtcars dataset that's included with base R. Here's the description of the data according to the R Documentation
+
+"The data was extracted from the 1974 Motor Trend US magazine, and comprises fuel consumption and 10 aspects of automobile design and performance for 32 automobiles (1973–74 models)."
+
+Results: Coefficients and Significance Values
+========================================================
+
+The app shows the coefficients of the fitted model and the p-values so the user can determine if the variable has a statistically significant impact on the fuel consumption
+
+```{r, echo=FALSE}
+model <- lm(mpg ~ cyl + am + gear + wt +carb, data = mtcars )
+
+df <- coef(summary(model))
+df
+
+```
+
+Results: Plotting
+========================================================
+
+Also the app plots the fitted values produced by the model vs. the real data from the dataset; obviously the results depend on the variables the user chooses
+
+```{r, echo=FALSE}
+
+model <- lm(mpg ~ cyl + am + gear + wt +carb, data = mtcars )
+
+plot(x=model$fitted, y=model$model$mpg, xlab = "Fitted Values", ylab = "Real Values")
+title("Model Results")
+
+```
